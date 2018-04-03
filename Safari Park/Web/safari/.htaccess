@@ -1,0 +1,151 @@
+FileETag MTime Size
+Options +FollowSymLinks
+Options -Indexes
+RewriteEngine On
+RewriteBase /
+ErrorDocument 404 /404.php
+Header set Access-Control-Allow-Origin "*"
+#
+RewriteCond %{HTTP_USER_AGENT} libwww-perl.*
+RewriteRule .* ? [F,L]
+#
+#Need to change IP ADDRESS HERE
+RewriteCond %{HTTP_HOST} ^5\.189\.190\.99
+RewriteRule (.*) http://demo.mywire.org/$1 [R=301,L]
+#
+RewriteCond %{REQUEST_URI} (.*).sqlite [NC]
+RewriteRule ^(.*)$ 404.php [R=404,L]
+#
+RewriteRule ^classes/(.*)$ 404.php [R=404,L]
+
+RewriteRule ^api/v2/([a-zA-Z]+)$ includes/api/8a5da52ed126447d359e70c05721a8aa.php?$1 [NC,L]
+RewriteRule ^api/v2/([a-zA-Z]+)/(.*)$ includes/api/8a5da52ed126447d359e70c05721a8aa.php?$1&token=$2 [NC,L]
+RewriteRule ^confirm/(.*)$ index.php?action=confirm&for=$1 [NC,L]
+RewriteRule ^reset/(.*)$ index.php?action=reset&for=$1 [NC,L]
+RewriteRule ^payment/([a-zA-Z0-9]+)/(.*)$ index.php?action=payment&for=$1&job=$2 [NC,L]
+
+
+RewriteRule ^admin/([a-zA-Z]+)$ index.php?action=admin&for=$1 [NC,L]
+RewriteRule ^admin/([a-zA-Z]+)/(.*)$ index.php?action=admin&for=$1&job=$2 [NC,L]
+RewriteRule ^admin index.php?action=admin [NC,L]
+
+
+RewriteRule ^gate/([a-zA-Z]+)$ index.php?action=gate&for=$1 [NC,L]
+RewriteRule ^gate/([a-zA-Z]+)/(.*)$ index.php?action=gate&for=$1&job=$2 [NC,L]
+RewriteRule ^gate index.php?action=gate [NC,L]
+
+
+<IfModule mod_headers.c>
+#Header set X-FRAME-OPTIONS "SAMEORIGIN"
+Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
+Header set X-XSS-Protection "1; mode=block"
+Header set X-Content-Type-Options "nosniff"
+Header set Content-Security-Policy "script-src 'self'"
+Header set Content-Security-Policy "style-src 'self'"
+Header set Content-Security-Policy "img-src 'self'"
+Header set Content-Security-Policy "object-src 'self'"
+#Header set Content-Security-Policy "font-src 'self' data: https://fonts.gstatic.com"
+</IfModule>
+
+# Enable Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+  AddOutputFilterByType DEFLATE application/x-font
+  AddOutputFilterByType DEFLATE application/x-font-opentype
+  AddOutputFilterByType DEFLATE application/x-font-otf
+  AddOutputFilterByType DEFLATE application/x-font-truetype
+  AddOutputFilterByType DEFLATE application/x-font-ttf
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE font/opentype
+  AddOutputFilterByType DEFLATE font/otf
+  AddOutputFilterByType DEFLATE font/ttf
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE image/x-icon
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE text/plain
+</IfModule>
+<IfModule mod_gzip.c>
+  mod_gzip_on Yes
+  mod_gzip_dechunk Yes
+  mod_gzip_item_include file .(html?|txt|css|js|php|pl)$
+  mod_gzip_item_include handler ^cgi-script$
+  mod_gzip_item_include mime ^text/.*
+  mod_gzip_item_include mime ^application/x-javascript.*
+  mod_gzip_item_exclude mime ^image/.*
+  mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</IfModule>
+
+# Leverage Browser Caching
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType text/html "access plus 1 month"
+  ExpiresByType application/pdf "access plus 1 month"
+  ExpiresByType text/x-javascript "access plus 1 month"
+  ExpiresByType application/x-shockwave-flash "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresDefault "access plus 1 month"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <filesmatch "\.(ico|flv|jpg|jpeg|png|gif|css|swf)$">
+  Header set Cache-Control "max-age=2678400, public"
+  </filesmatch>
+  <filesmatch "\.(html|htm)$">
+  Header set Cache-Control "max-age=7200, private, must-revalidate"
+  </filesmatch>
+  <filesmatch "\.(pdf)$">
+  Header set Cache-Control "max-age=86400, public"
+  </filesmatch>
+  <filesmatch "\.(js)$">
+  Header set Cache-Control "max-age=2678400, private"
+  </filesmatch>
+
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+##.......
+
+AddType application/x-font-woff2 .woff2
+AddType application/x-font-woff .woff
+
+
+# secure certificate file
+<Files .crt>
+  order allow,deny
+  deny from all
+</Files>
+
+#Json
+<Files .json>
+  order allow,deny
+  deny from all
+</Files>
+
+#Ga
+<Files .ga>
+  order allow,deny
+  deny from all
+</Files>
+
+# secure key file
+<Files .key>
+  order allow,deny
+  deny from all
+</Files>
+
+<Files .pem>
+  order allow,deny
+  deny from all
+</Files>
